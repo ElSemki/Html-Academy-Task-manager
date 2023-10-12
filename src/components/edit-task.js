@@ -1,6 +1,26 @@
-export const createTaskEditTemplate = () => {
+import { monthNames } from '../const.js';
+import { formatTime } from '../utils.js';
+import { createHashtagsListTemplate } from './hashtags.js';
+
+export const createTaskEditTemplate = (task) => {
+	const { description, dueDate, repeatingDays, tags, color } = task;
+
+	const isExpired = dueDate instanceof Date && dueDate < Date.now();
+	const isDateShowing = !!dueDate;
+
+	const date = isDateShowing
+		? `${dueDate.getDate()} ${monthNames[dueDate.getMonth()]}`
+		: '';
+	const time = isDateShowing ? formatTime(dueDate) : '';
+
+	const hashtagsList = createHashtagsListTemplate(Array.from(tags));
+	const repeatClass = Object.values(repeatingDays).some(Boolean)
+		? `card--repeat`
+		: '';
+	const deadlineClass = isExpired ? 'card--deadline' : '';
+
 	return `
-		<article class="card card--edit card--yellow card--repeat">
+		<article class="card card--edit card--${color} ${repeatClass}">
 			<form class="card__form" method="get">
 				<div class="card__inner">
 					<div class="card__color-bar">
@@ -15,7 +35,7 @@ export const createTaskEditTemplate = () => {
 								class="card__text"
 								placeholder="Start typing your text here..."
 								name="text"
-							>Here is a card with filled data</textarea>
+							>${description}</textarea>
 						</label>
 					</div>
 
@@ -23,7 +43,7 @@ export const createTaskEditTemplate = () => {
 						<div class="card__details">
 							<div class="card__dates">
 								<button class="card__date-deadline-toggle" type="button">
-									date: <span class="card__date-status">yes</span>
+									date: <span class="card__date-status">${date ? 'yes' : 'no'}</span>
 								</button>
 
 								<fieldset class="card__date-deadline">
@@ -33,13 +53,13 @@ export const createTaskEditTemplate = () => {
 											type="text"
 											placeholder=""
 											name="date"
-											value="23 September 11:15 PM"
+											value="${date} ${time}"
 										/>
 									</label>
 								</fieldset>
 
 								<button class="card__repeat-toggle" type="button">
-									repeat:<span class="card__repeat-status">yes</span>
+									repeat:<span class="card__repeat-status">${repeatClass ? 'yes' : 'no'}</span>
 								</button>
 
 								<fieldset class="card__repeat-days">
