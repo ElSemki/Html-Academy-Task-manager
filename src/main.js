@@ -10,6 +10,8 @@ import { generateFilters } from './mock/filter.js';
 import { generateTasks } from './mock/task.js';
 
 const TASKS_COUNT = 22;
+const SHOW_TASK_COUNT_ON_START = 8;
+const SHOW_TASK_COUNT_BY_BTN = 8;
 
 const render = (container, template, place = 'beforeend') =>
 	container.insertAdjacentHTML(place, template);
@@ -32,7 +34,22 @@ const tasksListElement = boardElement.querySelector('.board__tasks');
 const tasks = generateTasks(TASKS_COUNT);
 render(tasksListElement, createTaskEditTemplate(tasks[0]));
 tasks
-	.slice(1)
+	.slice(1, SHOW_TASK_COUNT_ON_START)
 	.forEach((task) => render(tasksListElement, createTaskTemplate(task)));
 
 render(boardElement, createLoadMoreButtonTemplate());
+
+const loadMoreBtn = boardElement.querySelector('.load-more');
+loadMoreBtn.addEventListener('click', (evt) => {
+	const allTasks = tasksListElement.children.length - 1;
+	if (allTasks + SHOW_TASK_COUNT_ON_START >= tasks.length) {
+		tasks
+			.slice(allTasks)
+			.forEach((task) => render(tasksListElement, createTaskTemplate(task)));
+		evt.target.remove();
+	} else {
+		tasks
+			.slice(allTasks, allTasks + SHOW_TASK_COUNT_BY_BTN)
+			.forEach((task) => render(tasksListElement, createTaskTemplate(task)));
+	}
+});

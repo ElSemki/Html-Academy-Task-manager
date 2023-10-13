@@ -1,3 +1,5 @@
+const colors = ['black', 'yellow', 'blue', 'green', 'pink'];
+
 const monthNames = [
 	'January',
 	'February',
@@ -13,4 +15,6 @@ const monthNames = [
 	'December',
 ];
 
-export { monthNames };
+const daysOfTheWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su'];
+
+export { colors, daysOfTheWeek, monthNames };

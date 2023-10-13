@@ -1,8 +1,7 @@
+import { colors } from '../const.js';
 import { getRandomArrayItem, getRandomDate } from '../utils.js';
 
 //* Моковые данные для карточки
-
-const colors = ['black', 'yellow', 'blue', 'green', 'pink'];
 
 const descriptionItem = [
 	'Изучить теорию',

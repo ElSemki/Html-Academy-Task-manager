@@ -1,22 +1,27 @@
 import { monthNames } from '../const.js';
 import { formatTime } from '../utils.js';
-import { createHashtagsListTemplate } from './hashtags.js';
+import { createHashtagTemplate } from './task-hashtag.js';
 
 export const createTaskTemplate = (task) => {
 	const { description, dueDate, repeatingDays, tags, color } = task;
 
+	//* Просрочена ли задача
 	const isExpired = dueDate instanceof Date && dueDate < Date.now();
+	//* Показывается ли дата
 	const isDateShowing = !!dueDate;
 
 	const date = isDateShowing
 		? `${dueDate.getDate()} ${monthNames[dueDate.getMonth()]}`
 		: '';
+
 	const time = isDateShowing ? formatTime(dueDate) : '';
 
-	const hashtagsList = createHashtagsListTemplate(Array.from(tags));
+	const hashtags = createHashtagTemplate([...tags]);
+
 	const repeatClass = Object.values(repeatingDays).some(Boolean)
 		? `card--repeat`
 		: '';
+
 	const deadlineClass = isExpired ? 'card--deadline' : '';
 
 	return `
@@ -58,7 +63,11 @@ export const createTaskTemplate = (task) => {
 									</p>
 								</div>
 							</div>
-							${hashtagsList}
+							<div class="card__hashtag">
+								<div class="card__hashtag-list">
+								${hashtags}
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
